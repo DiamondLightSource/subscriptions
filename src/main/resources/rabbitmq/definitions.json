@@ -1,6 +1,31 @@
 {
-  "bindings": [],
-  "exchanges": [],
+  "exchanges": [{
+    "name": "public",
+    "vhost": "/",
+    "type": "topic",
+    "durable": true,
+    "auto_delete": false,
+    "internal": false,
+    "arguments": {}
+  }],
+  "queues": [{
+    "name": "public",
+    "vhost": "/",
+    "durable": true,
+    "auto_delete": false,
+    "arguments": {
+      "x-queue-type": "classic"
+    }
+  }],
+  "bindings": [{
+    "source": "public",
+    "vhost": "/",
+    "destination": "public",
+    "destination_type": "queue",
+    "routing_key": "public.#",
+    "arguments": {}
+  }],
+  "policies": [],
   "global_parameters": [],
   "parameters": [],
   "permissions": [{
@@ -10,27 +35,31 @@
     "vhost": "/",
     "write": ".*"
   }],
-  "policies": [],
-  "queues": [],
   "topic_permissions": [],
   "users": [{
     "hashing_algorithm": "rabbit_password_hashing_sha256",
     "limits": {},
     "name": "admin",
     "password_hash": "gLd5gTQO7JDiskoCD6VMV6cn8FKfIfMLmYHz0PNEPUulJ8hN",
-    "tags": ["administrator"]
+    "tags": [
+      "administrator"
+    ]
   }, {
     "hashing_algorithm": "rabbit_password_hashing_sha256",
     "limits": {},
     "name": "subscription",
     "password_hash": "ZJhYVvyVOqyxeVViFOW08NTFvNyMN5fK8bJxpXzs1FBD3D/o",
-    "tags": ["administrator"]
+    "tags": [
+      "administrator"
+    ]
   }, {
     "hashing_algorithm": "rabbit_password_hashing_sha256",
     "limits": {},
     "name": "guest",
     "password_hash": "3b1P9sld6cG4iU7I6QC3zDs+af1emmbzYeU1WETxabABqg2R",
-    "tags": ["administrator"]
+    "tags": [
+      "administrator"
+    ]
   }],
   "vhosts": [{
     "limits": [],
