@@ -1,0 +1,16 @@
+RABBITMQ_ERLANG_COOKIE="SomeRandomStringHere"
+RABBITMQ_CONFIG_FILE="/etc/rabbitmq/conf.d/main/rabbitmq.conf"
+RABBITMQ_ENABLED_PLUGINS_FILE="/etc/rabbitmq/conf.d/main/enabled_plugins"
+HOSTNAME="rabbit01"
+
+podman run -d \
+    --hostname ${HOSTNAME}.kresy.local \
+    --name ${HOSTNAME} \
+    -p 5672:5672 \
+    -p 15672:15672 \
+    -e RABBITMQ_ERLANG_COOKIE=${RABBITMQ_ERLANG_COOKIE} \
+    -e RABBITMQ_NODENAME=rabbit@${HOSTNAME} \
+    -e RABBITMQ_CONFIG_FILE=${RABBITMQ_CONFIG_FILE} \
+    -e RABBITMQ_ENABLED_PLUGINS_FILE=${RABBITMQ_ENABLED_PLUGINS_FILE} \
+    -v /scratch/services/subscriptions/src/main/resources/rabbitmq:/etc/rabbitmq/conf.d/main \
+    docker.io/library/rabbitmq:management
