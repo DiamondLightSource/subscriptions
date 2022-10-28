@@ -1,26 +1,16 @@
 server:
   port: 9020
 
-activemq:
+connection:
   host: localhost
-  port: 61616
-  stompPort: 61613
+  port: 61613
   username: subscription
   password: M98CnVxB81AAy8xVheQ=
   destinations:
-    - /queue/public
     - /topic/public
+    - /queue/public
   filteredDestinations:
     - /app
 
-  rabbitmq:
-    host: localhost
-    port: 61616
-    stompPort: 61613
-    username: subscription
-    password: M98CnVxB81AAy8xVheQ=
-    destinations:
-      - /queue//public
-      - /topic/public
-    filteredDestinations:
-      - /app
+websocket:
+  subscriptionEndpoint: /subscriptions

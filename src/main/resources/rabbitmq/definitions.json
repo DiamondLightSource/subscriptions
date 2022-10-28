@@ -8,15 +8,7 @@
     "internal": false,
     "arguments": {}
   }],
-  "queues": [{
-    "name": "public",
-    "vhost": "/",
-    "durable": true,
-    "auto_delete": false,
-    "arguments": {
-      "x-queue-type": "classic"
-    }
-  }],
+  "queues": [],
   "bindings": [{
     "source": "public",
     "vhost": "/",
@@ -32,6 +24,12 @@
     "configure": ".*",
     "read": ".*",
     "user": "guest",
+    "vhost": "/",
+    "write": ".*"
+  }, {
+    "configure": ".*",
+    "read": ".*",
+    "user": "subscription",
     "vhost": "/",
     "write": ".*"
   }],

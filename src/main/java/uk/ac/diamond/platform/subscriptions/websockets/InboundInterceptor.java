@@ -1,18 +1,21 @@
-package uk.ac.diamond.platform.subscriptions.messaging;
+package uk.ac.diamond.platform.subscriptions.websockets;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
 import org.springframework.stereotype.Service;
+import uk.ac.diamond.platform.subscriptions.config.BrokerConnection;
 
 @Slf4j
 @Service
-public class WebSocketInboundInterceptor implements ChannelInterceptor {
+public class InboundInterceptor implements ChannelInterceptor {
 
-    private static final String PUBLIC_TOPIC_PREFIX = "/topic/public";
+    @Autowired
+    private BrokerConnection brokerConnection;
 
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
@@ -23,7 +26,7 @@ public class WebSocketInboundInterceptor implements ChannelInterceptor {
             case CONNECT -> log.info("New connection for session {}", accessor.getSessionId());
             case SUBSCRIBE -> {
                 String destination = accessor.getDestination();
-                if (!destination.startsWith(PUBLIC_TOPIC_PREFIX)) {
+                if (!destination.startsWith(brokerConnection.destinations()[0])) {
                     log.error("Only public topics may be subscribed to; {} is not public", destination);
                     message = null;
                 } else {

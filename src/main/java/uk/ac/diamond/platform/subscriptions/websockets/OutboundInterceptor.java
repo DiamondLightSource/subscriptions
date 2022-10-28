@@ -1,4 +1,4 @@
-package uk.ac.diamond.platform.subscriptions.messaging;
+package uk.ac.diamond.platform.subscriptions.websockets;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.Message;
@@ -12,7 +12,7 @@ import java.nio.charset.StandardCharsets;
 
 @Slf4j
 @Service
-public class WebSocketOutboundInterceptor implements ChannelInterceptor {
+public class OutboundInterceptor implements ChannelInterceptor {
 
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
