@@ -10,6 +10,9 @@ import org.springframework.messaging.support.ChannelInterceptor;
 import org.springframework.stereotype.Service;
 import uk.ac.diamond.platform.subscriptions.config.BrokerConnection;
 
+/**
+ * Intercepts messages from the Web Socket channel before they are forwarded on to the broker
+ */
 @Slf4j
 @Service
 public class InboundInterceptor implements ChannelInterceptor {
@@ -19,25 +22,28 @@ public class InboundInterceptor implements ChannelInterceptor {
 
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
-        final StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
+        log.trace("Message Headers: {}", message.getHeaders().values());
 
-        StompCommand command = accessor.getCommand();
-        switch (command) {
-            case CONNECT -> log.info("New connection for session {}", accessor.getSessionId());
-            case SUBSCRIBE -> {
-                String destination = accessor.getDestination();
-                if (!destination.startsWith(brokerConnection.destinations()[0])) {
-                    log.error("Only public topics may be subscribed to; {} is not public", destination);
-                    message = null;
-                } else {
-                    log.info("Creating subscription to {} for session {} with id {}",
-                            destination, accessor.getSessionId(), accessor.getSubscriptionId());
+        final StompHeaderAccessor acc = StompHeaderAccessor.wrap(message);
+        StompCommand command = acc.getCommand();
+        if (command != null) {
+            switch (command) {
+                case CONNECT -> log.info("New connection for session {}", acc.getSessionId());
+                case SUBSCRIBE -> {
+                    String destination = acc.getDestination();
+                    if (destination != null && !destination.startsWith(brokerConnection.destinations()[0])) {
+                        log.error("Only public topics may be subscribed to; {} is not public", destination);
+                        message = null;
+                    } else {
+                        log.info("Creating subscription to {} for session {} with subscriptionId {} and receiptId {}",
+                                destination, acc.getSessionId(), acc.getSubscriptionId(), acc.getReceipt());
+                    }
                 }
+                case UNSUBSCRIBE -> log.info("Deleting subscription to {} for session {} with id {}",
+                        acc.getDestination(), acc.getSessionId(), acc.getSubscriptionId());
+                case DISCONNECT -> log.info("Session {} disconnected", acc.getSessionId());
+                default -> log.debug("STOMP {} command message with payload {}", command, acc.getMessage());
             }
-            case UNSUBSCRIBE -> log.info("Deleting subscription to {} for session {} with id {}",
-                    accessor.getDestination(), accessor.getSessionId(), accessor.getSubscriptionId());
-            case DISCONNECT -> log.info("Session {} disconnected", accessor.getSessionId());
-            default -> log.debug("STOMP {} command message with payload {}", command, accessor.getMessage());
         }
         return message;
     }
