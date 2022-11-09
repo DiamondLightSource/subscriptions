@@ -1,0 +1,16 @@
+HOSTNAME="active01"
+
+podman run -d \
+    --hostname ${HOSTNAME}.dls.local \
+    --name ${HOSTNAME} \
+    -p 8161:8161 \
+    -p 61616:61616 \
+    -p 61613:61613 \
+    -e ACTIVEMQ_CONFIG_NAME=${HOSTNAME} \
+    -e ACTIVEMQ_ADMIN_LOGIN=admin \
+    -e ACTIVEMQ_ADMIN_PASSWORD=admin \
+    -e ACTIVEMQ_USERS_subscription=M98CnVxB81AAy8xVheQ= \
+    -e ACTIVEMQ_GROUPS_owners=subscription \
+    -e ACTIVEMQ_CONFIG_MINMEMORY=1024 \
+    -e ACTIVEMQ_CONFIG_MAXMEMORY=4096 \
+    docker.io/rmohr/activemq:5.15.2

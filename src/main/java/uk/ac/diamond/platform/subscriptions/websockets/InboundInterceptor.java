@@ -16,22 +16,21 @@ import uk.ac.diamond.platform.subscriptions.config.BrokerConnection;
 @Slf4j
 @Service
 public class InboundInterceptor implements ChannelInterceptor {
-
     @Autowired
-    private BrokerConnection brokerConnection;
+    private BrokerConnection connection;
 
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
         log.trace("Message Headers: {}", message.getHeaders().values());
 
-        final StompHeaderAccessor acc = StompHeaderAccessor.wrap(message);
+        final StompHeaderAccessor acc = (StompHeaderAccessor) StompHeaderAccessor.getMutableAccessor(message);
         StompCommand command = acc.getCommand();
         if (command != null) {
             switch (command) {
                 case CONNECT -> log.info("New connection for session {}", acc.getSessionId());
                 case SUBSCRIBE -> {
-                    String destination = acc.getDestination();
-                    if (destination != null && !destination.startsWith(brokerConnection.destinations()[0])) {
+                    String destination = formattedDestination(acc);
+                    if (!destination.startsWith(connection.destinations()[0])) {
                         log.error("Only public topics may be subscribed to; {} is not public", destination);
                         message = null;
                     } else {
@@ -48,4 +47,17 @@ public class InboundInterceptor implements ChannelInterceptor {
         return message;
     }
 
+    private String formattedDestination(StompHeaderAccessor acc) {
+        String formatted = "";
+
+        String destination = acc.getDestination();
+        if (destination != null) {
+            if(!destination.startsWith(connection.routingPrefix())) {
+                acc.setDestination(connection.routingPrefix() + destination);
+            }
+            formatted = acc.getDestination();
+        }
+        acc.setImmutable();
+        return formatted;
+    }
 }

@@ -12,6 +12,7 @@ public record BrokerConnection(
         String username,
         String password,
         String[] destinations,
-        String[] filteredDestinations) {
+        String[] filteredDestinations,
+        String routingPrefix) {
 
 }

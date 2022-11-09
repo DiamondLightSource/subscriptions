@@ -8,9 +8,9 @@ connection:
   password: M98CnVxB81AAy8xVheQ=
   destinations:
     - /topic/public
-    - /queue/public
   filteredDestinations:
     - /app
+  routingPrefix: /topic/
 
 websocket:
   subscriptionEndpoint: /subscriptions
