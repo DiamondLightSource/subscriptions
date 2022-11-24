@@ -1,7 +1,7 @@
 asyncapi: 2.5.0
 info:
   title: Subscriptions Service WebSocket API
-  version: 0.1.0
+  version: 0.1.2
   description: >-
     This describes the messages that can be used over web sockets to manage subscriptions. It is largely a description 
     of the bits of and extra constraints placed upon the STOMP 1.2 protocol as used by the subscriptions service. As 
