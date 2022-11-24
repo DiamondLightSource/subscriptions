@@ -38,18 +38,17 @@ channels:
         oneOf:
           - $ref: '#/components/messages/Connected'
           - $ref: '#/components/messages/ActionSuccessfulReceipt'
-          - $ref: '#/components/messages/STOMPError'
+          - $ref: '#/components/messages/Error'
 components:
   messages:
     Connect:
+      description: >-
+        The instruction to establish a new STOMP connection to the underlying broker.
+      messageId: CONNECT
+      name: CONNECT
       headers:
         type: object
         properties:
-          stompCommand:
-            type: string
-            description: >-
-              The instruction to establish a new STOMP connection to the underlying broker.
-            const: CONNECT
           accept-version:
             type: string
             description: >-
@@ -75,83 +74,80 @@ components:
             minItems: 2
             maxItems: 2
         required:
-          - stompCommand
           - accept-version
           - host
       x-response:
         summary: >-
           The connected message will only be returned on success, so clients must handle the no response case.
         $ref: '#/components/messages/Connected'
+      examples:
+        - {
+          headers: {
+            'accept-version': '1.1,1.2',
+            'host': '/',
+            'heart-beat': [0,1000]
+          }
+        }
     Connected:
       summary: >-
         The server message to indicate a successful STOMP connection has been made to the underlying broker.
+      messageId: CONNECTED
+      name: CONNECTED
       headers:
         type: object
         properties:
-          stompCommand:
-            description: >-
-              The indication that the STOMP connection has been successfully created. Note: Unless otherwise noted, all  
-              STOMP header values within the command header are presnted as single element string arrays.
+          version:
+            description: The version of the STOMP protocol the session will be using.
             type: string
-            const: CONNECTED
-            properties:
-              version:
-                description: The version of the STOMP protocol the session will be using.
-                type: array
-                items:
-                  type: string
-                minItems: 1
-                maxItems: 1
-              server:
-                description: >-
-                  The name and version of the Broker providing the STOMP connection in the form Name/Version
-                type: array
-                items:
-                  type: string
-                minItems: 1
-                maxItems: 1
-              heart-beat:
-                description: >-
-                  An array of two integers. The first indicates the smallest number of milliseconds between hearbeat
-                  signals that the server can guarantee to provide. O for this value indicates that the server cannot,
-                  or does not want to generate hearbeat signals. The second value indicates whether this server wants to
-                  receive heartbeat signals and, if so, the desired number of milliseconds between successive signals. A
-                  value of 0 indicates hearbeat signals are not required, with any positive number being the timeout
-                  period otherwise. So, for instance a value of [1000, 0] would indicate that the server will produce a
-                  heatbeat signal within 1 second of every communication, but does not expect such signals from the 
-                  client. If this header is not provided or is set to the default value of [0,0], this indicates that 
-                  neither client nor server expects hearbeat signals to be used.
-                type: array
-                items:
-                  type: integer
-                minItems: 2
-                maxItems: 2
-                default: [0,0]
-              session:
-                description: >-
-                  The id of the STOMP session creted by the broker in broker specific format
-                type: array
-                items:
-                  type: string
-                minItems: 1
-                maxItems: 1
-            required:
-              - version
-          wsSessionId:
-            type: string
+          server:
             description: >-
-              GUID identifying the Websocket session
+              The name and version of the Broker providing the STOMP connection in the form Name/Version
+            type: string
+          heart-beat:
+            description: >-
+              An array of two integers. The first indicates the smallest number of milliseconds between hearbeat
+              signals that the server can guarantee to provide. O for this value indicates that the server cannot,
+              or does not want to generate hearbeat signals. The second value indicates whether this server wants to
+              receive heartbeat signals and, if so, the desired number of milliseconds between successive signals. A
+              value of 0 indicates hearbeat signals are not required, with any positive number being the timeout
+              period otherwise. So, for instance a value of [1000, 0] would indicate that the server will produce a
+              heatbeat signal within 1 second of every communication, but does not expect such signals from the 
+              client. If this header is not provided or is set to the default value of [0,0], this indicates that 
+              neither client nor server expects hearbeat signals to be used.
+            type: array
+            items:
+              type: integer
+            minItems: 2
+            maxItems: 2
+            default: [0,0]
+          session:
+            description: >-
+              The id of the STOMP session created by the broker in broker specific format
+            type: string
         required:
-          - stompCommand
+          - version
+      payload:
+        type: string
+        description: >-
+          GUID identifying the Websocket session
+      examples:
+        - {
+          headers: {
+            'version': '1.2',
+            'server': 'RabbitMQ/3.1.2',
+            'heart-beat': [ 1000,0 ],
+            'session': 'Rbg89d7h'
+          },
+          payload: 'af2097e4602c4f2bb98e39a8c48dbece'
+        }
     Disconnect:
+      description: >-
+        The instruction to delete the STOMP connection to the underlying broker.
+      messageId: DISCONNECT
+      name: DISCONNECT
       headers:
         type: object
         properties:
-          stompCommand:
-            type: string
-            description: >-
-              The instruction to delete the STOMP connection to the underlying broker.
-            const: DISCONNECT
           receipt:
             type: string
             description: >-
@@ -159,20 +155,18 @@ components:
               correctly processed; i.e. the STOMP connection has been closed. This must be unique within the client and, 
               to avoid clashes on the server should contain a prefix identifying the client e.g. its session id.
         required:
-          - stompCommand
           - receipt
       x-response:
         summary: >-
           The receipt message will only be returned on success so clients must handle the no response case.
         $ref: '#/components/messages/ActionSuccessfulReceipt'
     Subscribe:
+      description: The instruction to attempt to create a new subscription.
+      messageId: SUBSCRIBE
+      name: SUBSCRIBE
       headers:
         type: object
         properties:
-          stompCommand:
-            type: string
-            description: The instruction to attempt to create a new subscription.
-            const: SUBSCRIBE
           id:
             type: string
             description: >-
@@ -192,7 +186,6 @@ components:
               client and, to avoid clashes on the server should contain a prefix identifying the client e.g. its session
               id.
         required:
-          - stompCommand
           - id
           - destination
           - receipt
@@ -200,14 +193,21 @@ components:
         summary: >-
           The receipt message will only be returned on success so clients must handle the no response case.
         $ref: '#/components/messages/ActionSuccessfulReceipt'
+      examples:
+        - {
+          headers: {
+            'id': 'CDGE-14A77DDE3',
+            'destination': 'public.bluesky.event',
+            'receipt': 'CDGE-R19'
+          }
+        }
     Unsubscribe:
+      description: The instruction to attempt to delete and existing subscription.
+      messageId: UNSUBSCRIBE
+      name: UNSUBSCRIBE
       headers:
         type: object
         properties:
-          stompCommand:
-            type: string
-            description: The instruction to attempt to delete and existing subscription.
-            const: UNSUBSCRIBE
           id:
             type: string
             description: >-
@@ -222,7 +222,6 @@ components:
               client and, to avoid clashes on the server should contain a prefix identifying the client e.g. its session
               id.
         required:
-          - stompCommand
           - id
           - receipt
       x-response:
@@ -232,28 +231,55 @@ components:
     ActionSuccessfulReceipt:
       summary: >-
         Indicates the successful completion of a previously requested operation identified by the receipt-id.
+      messageId: RECEIPT
+      name: RECEIPT
       headers:
         type: object
         properties:
-          stompCommand:
+          receipt-id:
             description: >-
-              Indicates that this message identifies a previously requested operation that has been successfully 
-              completed.
+              The id of the message originally submitted by the client when requesting and action.
             type: string
-            const: RECEIPT
-            properties:
-              receipt-id:
-                description: >-
-                  The id of the message originally submitted by the client when requesting and action.
-                type: array
-                items:
-                  type: string
-                minItems: 1
-                maxItems: 1
         required:
           - receipt-id
-    STOMPError:
+      payload:
+        type: string
+        description: >-
+          GUID identifying the Websocket session
+      examples:
+        - {
+          headers: {
+            'receipt-id': 'CDGE-R19'
+          },
+          payload: 'af2097e4602c4f2bb98e39a8c48dbece'
+        }
+    Error:
       summary: >-
         Returned by the server (broker) in the event of an invalid STOMP message or the failure of an attemped operation  
         broker. Whenever an Error message is sent, the server will close the STOMP connection as soon as possible after 
         sending it as required by the protocol definiion.
+      messageId: ERROR
+      name: ERROR
+      headers:
+        type: object
+        properties:
+          message:
+            description: >-
+              Description of the error.
+            type: string
+          receipt-id:
+            description: >-
+              The id of the message originally submitted by the client when requesting and action.
+            type: string
+      payload:
+        type: string
+        description: >-
+          Further details of the error
+      examples:
+        - {
+          headers: {
+            'message': 'malformed frame received',
+            'receipt-id': 'CDGE-R19'
+          },
+          payload: 'Did not contain a destination header, which is REQUIRED'
+        }
