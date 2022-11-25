@@ -29,6 +29,6 @@ else
 fi
 
 # Actual build happens here
-echo "Command to execute is..."
+echo "Command to execute is: "
 echo $CMD
 $CMD
