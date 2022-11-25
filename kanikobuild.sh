@@ -3,7 +3,6 @@
 
 echo 'Building image...'
 
-
 # By default the image is published with a :latest tag
 DESTINATION="gcr.io/diamond-pubreg/daq-core/$CI_PROJECT_NAME"
 CMD="/kaniko/executor --verbosity=fatal --context $CI_PROJECT_DIR --dockerfile $CI_PROJECT_DIR/Dockerfile"
