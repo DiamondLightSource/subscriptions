@@ -5,8 +5,8 @@ echo 'Building image...'
 
 # By default the image is published with a :latest tag
 DESTINATION="gcr.io/diamond-pubreg/daq-core/$CI_PROJECT_NAME"
-CMD="/kaniko/executor --verbosity=fatal --context $CI_PROJECT_DIR --dockerfile $CI_PROJECT_DIR/Dockerfile"
-#CMD="/kaniko/executor --context $CI_PROJECT_DIR --dockerfile $CI_PROJECT_DIR/Dockerfile"
+#CMD="/kaniko/executor --verbosity=fatal --context $CI_PROJECT_DIR --dockerfile $CI_PROJECT_DIR/Dockerfile"
+CMD="/kaniko/executor --context $CI_PROJECT_DIR --dockerfile $CI_PROJECT_DIR/Dockerfile"
 
 # If this is a test build, ensure we don't push
 if [ ! -z "${CI_CONTAINER_TEST_BUILD}" ]
