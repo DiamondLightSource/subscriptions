@@ -1,6 +1,6 @@
 #
 # Build stage
-FROM docker.io/library/maven:3-openjdk-17 as build
+FROM docker.io/library/maven:3-openjdk-17 AS build
 
 COPY . /source
 RUN mvn  -q -f /source/pom.xml clean package spring-boot:repackage
