@@ -1,0 +1,6 @@
+dependencies:
+- name: activemq-daq
+  repository: https://sonatypenexus.diamond.ac.uk/repository/daq-helm
+  version: 1.1.2
+digest: sha256:6cb41e68b5519d889007c48d2d4795f74c03ccaa3ba54aad5237a932a50fd4fb
+generated: "2022-11-29T16:00:22.533701942Z"

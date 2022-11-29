@@ -51,6 +51,15 @@ test:
   script:
     - mvn test
 
+test helm dependency build:
+  tags:
+    - argus
+  stage: test
+  script:
+    - helm dependency build
+  image:
+    name: gcr.io/diamond-pubreg/gda-core/nexus-helm-utils:latest
+
 build and publish docker image:
   tags:
     - argus
@@ -95,6 +104,7 @@ deploy:
     - export TOKEN=`kubectl -n=daq-gitlab-ci get secret ${SECRET_NAME} -o jsonpath='{.data.token}' | base64 -d`
   script:
     - env | grep "CI_"
+    - helm dependency build
     - helm -n ${NAMESPACE} --kube-token ${TOKEN} upgrade --install --set image.tag=latest ${INSTALLATION_NAME} ${CHART}
     - kubectl -n ${NAMESPACE} --token ${TOKEN} rollout restart `kubectl -n ${NAMESPACE} --token ${TOKEN} get -o name deployment`
   stage: deploy
