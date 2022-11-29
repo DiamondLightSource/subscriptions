@@ -82,7 +82,7 @@ publish helm chart:
       - tags
 deploy:
   variables:
-    INSTALLATION_NAME: Subscriptions
+    INSTALLATION_NAME: subscriptions
     NAMESPACE: fri44821
     CHART: helm/subscriptions
     SECRET_NAME: fri44821-gitlab-runner-secret
