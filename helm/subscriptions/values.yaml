@@ -80,7 +80,8 @@ affinity: {}
 
 activemq-daq:
   enabled: true
-  admin.password: keef
+  admin:
+    password: keef
   fullnameOverride: messaging-backbone
   env:
     - name: ACTIVEMQ_USERS_subscription
