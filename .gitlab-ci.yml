@@ -51,16 +51,6 @@ test:
   script:
     - mvn test
 
-test helm dependency build:
-  tags:
-    - argus
-  stage: test
-  script:
-    - cd helm/subscriptions
-    - helm dependency build
-  image:
-    name: gcr.io/diamond-pubreg/gda-core/nexus-helm-utils:latest
-
 build and publish docker image:
   tags:
     - argus
@@ -86,9 +76,7 @@ publish helm chart:
     name: gcr.io/diamond-pubreg/gda-core/nexus-helm-utils:latest
   script:
     - env | grep "CI_"
-    - cd helm/${CI_PROJECT_NAME}
-    - helm dependency build
-    - nexus-push . ${CI_COMMIT_TAG} ${CI_CHART_REGISTRY}
+    - nexus-push helm/${CI_PROJECT_NAME} ${CI_COMMIT_TAG} ${CI_CHART_REGISTRY}
   only:
     refs:
       - tags
@@ -96,7 +84,7 @@ deploy:
   variables:
     INSTALLATION_NAME: subscriptions
     NAMESPACE: fri44821
-    CHART: helm/subscriptions
+    CHART: nexus/subscriptions
     SECRET_NAME: fri44821-gitlab-runner-secret
   tags:
     - daq-cd
@@ -105,6 +93,7 @@ deploy:
     entrypoint: ["/bin/sh", "-c"]
   before_script:
     - export TOKEN=`kubectl -n=daq-gitlab-ci get secret ${SECRET_NAME} -o jsonpath='{.data.token}' | base64 -d`
+    - helm repo add nexus ${CI_CHART_REGISTRY}
   script:
     - env | grep "CI_"
     - helm -n ${NAMESPACE} --kube-token ${TOKEN} upgrade --install --set image.tag=latest ${INSTALLATION_NAME} ${CHART}
