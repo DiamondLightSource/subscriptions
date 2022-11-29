@@ -95,7 +95,7 @@ deploy:
     - export TOKEN=`kubectl -n=daq-gitlab-ci get secret ${SECRET_NAME} -o jsonpath='{.data.token}' | base64 -d`
   script:
     - env | grep "CI_"
-    - helm -n ${NAMESPACE} --kube-token ${TOKEN} upgrade --install --set image.tag=main ${INSTALLATION_NAME} ${CHART}
+    - helm -n ${NAMESPACE} --kube-token ${TOKEN} upgrade --install --set image.tag=latest ${INSTALLATION_NAME} ${CHART}
     - kubectl -n ${NAMESPACE} --token ${TOKEN} rollout restart `kubectl -n ${NAMESPACE} --token ${TOKEN} get -o name deployment`
   stage: deploy
   only:
