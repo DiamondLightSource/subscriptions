@@ -3,6 +3,7 @@ stages:
   - test
   - container
   - helm chart
+  - deploy
 
 variables:
   # `showDateTime` will show the passed time in milliseconds. You need to specify `--batch-mode` to make this work.
@@ -79,3 +80,26 @@ publish helm chart:
   only:
     refs:
       - tags
+deploy:
+  variables:
+    INSTALLATION_NAME: Subscriptions
+    NAMESPACE: fri44821
+    CHART: helm/subscriptions
+    SECRET_NAME: fri44821-gitlab-runner-secret
+  tags:
+    - daq-cd
+  image:
+    name: gcr.io/diamond-pubreg/gda-core/nexus-helm-utils:latest
+    entrypoint: ["/bin/sh", "-c"]
+  before_script:
+    - export TOKEN=`kubectl -n=daq-gitlab-ci get secret ${SECRET_NAME} -o jsonpath='{.data.token}' | base64 -d`
+  script:
+    - env | grep "CI_"
+    - helm -n ${NAMESPACE} --kube-token ${TOKEN} upgrade --install --set image.tag=main ${INSTALLATION_NAME} ${CHART}
+    - kubectl -n ${NAMESPACE} --token ${TOKEN} rollout restart `kubectl -n ${NAMESPACE} --token ${TOKEN} get -o name deployment`
+  stage: deploy
+  only:
+    refs:
+      - tags
+
+
