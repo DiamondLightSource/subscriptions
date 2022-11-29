@@ -4,6 +4,8 @@
 
 replicaCount: 1
 
+springProfile: k8s
+
 image:
   repository: gcr.io/diamond-pubreg/daq-core/subscriptions
   pullPolicy: Always
@@ -75,5 +77,14 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+activemq-daq:
+  enabled: true
+  fullnameOverride: messaging-backbone
+  env:
+    - name: ACTIVEMQ_USERS_subscription
+      value: M98CnVxB81AAy8xVheQ=
+    - name: ACTIVEMQ_GROUPS_owners
+      value: subscription
 
 

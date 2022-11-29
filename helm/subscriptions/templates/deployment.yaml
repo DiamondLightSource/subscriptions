@@ -34,6 +34,9 @@ spec:
             - name: ws
               containerPort: 9020
               protocol: TCP
+
+          args:
+            - -Dspring.profiles.active={{ .Values.springProfile }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
