@@ -96,7 +96,7 @@ deploy:
     - helm repo add nexus ${CI_CHART_REGISTRY}
   script:
     - env | grep "CI_"
-    - helm -n ${NAMESPACE} --kube-token ${TOKEN} upgrade --install --set image.tag=latest ${INSTALLATION_NAME} ${CHART}
+    - helm -n ${NAMESPACE} --kube-token ${TOKEN} upgrade --install --version ${CI_COMMIT_TAG} --set image.tag=latest ${INSTALLATION_NAME} ${CHART}
     - kubectl -n ${NAMESPACE} --token ${TOKEN} rollout restart `kubectl -n ${NAMESPACE} --token ${TOKEN} get -o name deployment`
   stage: deploy
   only:
