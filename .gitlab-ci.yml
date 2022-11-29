@@ -56,6 +56,7 @@ test helm dependency build:
     - argus
   stage: test
   script:
+    - cd helm/subscriptions
     - helm dependency build
   image:
     name: gcr.io/diamond-pubreg/gda-core/nexus-helm-utils:latest
@@ -85,7 +86,9 @@ publish helm chart:
     name: gcr.io/diamond-pubreg/gda-core/nexus-helm-utils:latest
   script:
     - env | grep "CI_"
-    - nexus-push helm/${CI_PROJECT_NAME} ${CI_COMMIT_TAG} ${CI_CHART_REGISTRY}
+    - cd helm/${CI_PROJECT_NAME}
+    - helm dependency build
+    - nexus-push . ${CI_COMMIT_TAG} ${CI_CHART_REGISTRY}
   only:
     refs:
       - tags
@@ -104,7 +107,6 @@ deploy:
     - export TOKEN=`kubectl -n=daq-gitlab-ci get secret ${SECRET_NAME} -o jsonpath='{.data.token}' | base64 -d`
   script:
     - env | grep "CI_"
-    - helm dependency build
     - helm -n ${NAMESPACE} --kube-token ${TOKEN} upgrade --install --set image.tag=latest ${INSTALLATION_NAME} ${CHART}
     - kubectl -n ${NAMESPACE} --token ${TOKEN} rollout restart `kubectl -n ${NAMESPACE} --token ${TOKEN} get -o name deployment`
   stage: deploy
