@@ -8,7 +8,7 @@ spec:
   type: {{ .Values.service.type }}
   ports:
     - port: {{ .Values.service.port }}
-      targetPort: ws
+      targetPort: 9020
       protocol: TCP
       name: ws
   selector:
