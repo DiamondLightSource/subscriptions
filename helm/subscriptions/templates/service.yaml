@@ -8,8 +8,8 @@ spec:
   type: {{ .Values.service.type }}
   ports:
     - port: {{ .Values.service.port }}
-      targetPort: 9020
+      targetPort: ws
       protocol: TCP
       name: ws
   selector:
-    {{- include "subscriptions.selectorLabels" . | nindent 4 }}-upload
+    {{- include "subscriptions.selectorLabels" . | nindent 4 }}
