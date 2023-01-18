@@ -27,6 +27,9 @@ subscription attempt to have failed.
 All common config for the application is stored in ```src/main/resources/application.yml``` and loaded via the 
 ```BrokerConnection``` and ``WebSocket`` Records with broker specific setup in the appropriate adjacent subdirectory.
 
+A second configuration file ```src/main/resources/application-k8s.yml``` is provided to override the host name when the 
+application is deployed in Kubernetes. This is achieved by starting the app with the k8s Spring Profile actiive.
+
 ## Broker Initialisation
 Either ActiveMQ or RabbitMQ can be run under ```podman``` using the Container files provided, which will establish a 
 running instance of the selected broker with the standard setup expected by the subscription service. 
@@ -46,3 +49,6 @@ service and it will connect on the standard STOMP port 61613 as the user ```subs
 You cannot run both broker containers simultaneously as the ports will clash. If you want to switch to the other broker 
 you will need to stop the service and then run ```podman stop <running container id>```, before then executing the 
 alternative container file. After this the subscriptions service can be restarted and will connect to the new broker.
+
+For a Kubernetes the Helm chart expresses a dependency on the DAQ ActiveMQ Helm Chart caiusing it to be deployed to the 
+active Namespace when the main application is. This has also been configured to setup the necessary users. 
