@@ -4,6 +4,6 @@ metadata:
   name: {{ include "subscriptions.fullname" . }}-spring-config
 data:
   {{- with .Values.springConfig.config }}
-application.yaml: |-
-  {{- toYaml . | nindent 3 }}
+  application.yaml: |-
+    {{- toYaml . | nindent 3 }}
   {{- end }}

@@ -27,7 +27,7 @@ spec:
       volumes:
         - name: spring-config
           configMap:
-            name: { { include "subscriptions.fullname" . } }-spring-config
+            name: {{ include "subscriptions.fullname" . }}-spring-config
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
