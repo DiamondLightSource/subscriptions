@@ -24,6 +24,10 @@ spec:
       serviceAccountName: {{ include "subscriptions.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      volumes:
+        - name: spring-config
+          configMap:
+            name: { { include "subscriptions.fullname" . } }-spring-config
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
@@ -35,8 +39,12 @@ spec:
               containerPort: 9020
               protocol: TCP
           env:
-            - name: SPRING_PROFILES_ACTIVE
-              value: {{ .Values.springProfile }}
+            - name: spring.config.additional-location
+              value: /opt/spring/config/application.yaml
+          volumeMounts:
+            - name: spring-config
+              mountPath: "/opt/spring/config"
+              readOnly: true
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
