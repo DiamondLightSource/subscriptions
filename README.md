@@ -1,7 +1,8 @@
 # Subscriptions Service Prototype
 
 ## Overview
-Supports subscription to public event topics (provided internally by either ActiveMQ or RabbitMQ) using STOMP over websockets.
+Supports subscription to public event topics (provided internally by either ActiveMQ or RabbitMQ) using STOMP over 
+websockets (N.B. SockJS is not supported).
 
 Clients can connect on port ```9020``` to the ```/subscriptions``` endpoint and subscribe to topic names of the form
 
@@ -27,11 +28,12 @@ subscription attempt to have failed.
 All common config for the application is stored in ```src/main/resources/application.yml``` and loaded via the 
 ```BrokerConnection``` and ``WebSocket`` Records with broker specific setup in the appropriate adjacent subdirectory.
 
-A second configuration file ```src/main/resources/application-k8s.yml``` is provided to override the host name when the 
-application is deployed in Kubernetes. This is achieved by starting the app with the k8s Spring Profile actiive.
+When deployed in Kubernetes, the settings under ```springConfig.config``` section of the Helm chart's values.yaml file
+are used to override those in the this file. To do this a further application.yaml file is written to the 
+```/opt/spring/config``` folder within the deployed container, which is referenced by the chart's ConfigMap.
 
 ## Broker Initialisation
-Either ActiveMQ or RabbitMQ can be run under ```podman``` using the Container files provided, which will establish a 
+Either ActiveMQ or RabbitMQ can be run locally under ```podman``` using the Container files provided, which will establish a 
 running instance of the selected broker with the standard setup expected by the subscription service. 
 
 To initialise your broker of choice run the container file from the appropriate subdirectory of  ```resources```. 

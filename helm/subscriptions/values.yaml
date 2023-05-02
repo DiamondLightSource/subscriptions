@@ -88,6 +88,7 @@ activemq-daq:
     - name: ACTIVEMQ_GROUPS_owners
       value: subscription
 
+# thhhese settings will override default spring config when the service is deployed in Kubernetes
 springConfig:
   config:
     connection:

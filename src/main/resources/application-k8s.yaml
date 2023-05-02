@@ -1,4 +1,0 @@
-# This file will override the messaging connection hostname when the k8s spring profile is active
-
-connection:
-  host: messaging-backbone
