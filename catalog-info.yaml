@@ -1,0 +1,26 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: subscriptions
+  title: WebSocket/STOMP Subscriptions
+  description: Emits publically visible events over Websockets/STOMP 
+spec:
+  type: service
+  lifecycle: production
+  owner: user:fri44821
+  system: Athena
+  providesApis:
+    - subscriptions
+---
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: subscriptions
+  title: WebSocket/STOMP Subscriptions
+  description: Emits publically visible events over Websockets/STOMP
+spec:
+  type: asyncapi
+  lifecycle: production
+  owner: user:fri44821
+  definition:
+    $text: ./docs/user/reference/asyncapi.yaml
