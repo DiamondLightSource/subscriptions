@@ -1,8 +1,0 @@
-# Publishes helm chart for the service
-
-name: helm
-
-on:
-  workflow_call:
-
-jobs:
