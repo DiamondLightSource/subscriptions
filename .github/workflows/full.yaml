@@ -13,7 +13,7 @@ env:
 
 jobs:
   build-and-test:
-    uses: $WORKFLOWS/build.yaml@main
+    uses: ./.github/workflows/build.yaml
 #  containerise:
 #    needs: build-and-test
 #    uses: $WORKFLOWS/container.yaml
