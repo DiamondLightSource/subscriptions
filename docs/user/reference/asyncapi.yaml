@@ -9,15 +9,6 @@ info:
     release and also describes the use of Receipt messages to indicate success of requested operations. In addition, the 
     requirements and naming format for topics that may be subscribed to are recorded. Similar documentation for specific
     channels (topics) will be provided in separate AsyncAPI documents.
-servers:
-  development:
-    url: dev.cassandra.diamond.ac.uk/subscriptions
-    protocol: ws
-    protocolVersion: '13'
-  production:
-    url: prod.cassandra.diamond.ac.uk/subscriptions
-    protocol: wss
-    protocolVersion: '13'
 defaultContentType: application/json
 channels:
   /:
