@@ -15,4 +15,5 @@ jobs:
     uses: ./.github/workflows/container.yaml
   helm-chart:
     needs: containerise
+    if: (github.event_name == 'push' || github.event_name == 'pull_request') && contains(github.ref, 'refs/tags/')
     uses: ./.github/workflows/helm.yaml
