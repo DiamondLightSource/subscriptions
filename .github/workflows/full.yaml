@@ -13,6 +13,6 @@ jobs:
   containerise:
     needs: build-and-test
     uses: ./.github/workflows/container.yaml
-#  helm-chart:
-#    needs: containerise
-#    uses: ./.github/workflows/helm.yaml
+  helm-chart:
+    needs: containerise
+    uses: ./.github/workflows/helm.yaml
