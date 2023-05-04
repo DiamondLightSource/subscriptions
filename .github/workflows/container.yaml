@@ -1,4 +1,4 @@
-# Containerise the built code
+# Containerise the built code and store in Github image repo
 
 name: container
 
