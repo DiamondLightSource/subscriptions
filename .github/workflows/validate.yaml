@@ -1,0 +1,13 @@
+# Validates the AsyncAPI
+
+name: asyncapi_validate
+
+on:
+  workflow_call:
+
+jobs:
+  validate:
+    name: asyncapi-validate
+    uses: WaleedAshraf/asyncapi-github-action@v0
+    with:
+      filepath: 'docs/user/reference/asyncapi.yaml'
