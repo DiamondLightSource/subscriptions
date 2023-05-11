@@ -14,4 +14,4 @@ jobs:
     - name: asyncapi-validate
       uses: WaleedAshraf/asyncapi-github-action@v0.0.10
       with:
-        filepath: '../docs/user/reference/asyncapi.yaml'
+        filepath: './docs/user/reference/asyncapi.yaml'
