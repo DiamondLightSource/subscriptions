@@ -10,10 +10,16 @@ on:
 jobs:
   build-and-test:
     uses: ./.github/workflows/build.yaml
+  validate:
+    uses: ./.github/workflows/validate.yaml
   containerise:
-    needs: build-and-test
+    needs: [build-and-test, validate]
     uses: ./.github/workflows/container.yaml
   helm-chart:
     needs: containerise
     if: (github.event_name == 'push' || github.event_name == 'pull_request') && contains(github.ref, 'refs/tags/')
     uses: ./.github/workflows/helm.yaml
+#  deploy:
+#    needs: helm-chart
+#    if: (github.event_name == 'push' || github.event_name == 'pull_request') && contains(github.ref, 'refs/tags/')
+#    uses: ./.github/workflows/deploy.yaml
