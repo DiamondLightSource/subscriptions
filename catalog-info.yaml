@@ -20,6 +20,8 @@ metadata:
   name: subscriptions
   title: Athena Subscriptions
   description: Emits publically visible events over Websockets/STOMP
+  annotations:
+    github.com/project-slug: DiamondLightSource/subscriptions
 spec:
   type: asyncapi
   lifecycle: production
