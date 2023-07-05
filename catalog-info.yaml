@@ -9,7 +9,7 @@ metadata:
 spec:
   type: service
   lifecycle: production
-  owner: user:fri44821
+  owner: group:data-acquisition
   system: Athena
   providesApis:
     - subscriptions
@@ -23,6 +23,6 @@ metadata:
 spec:
   type: asyncapi
   lifecycle: production
-  owner: user:fri44821
+  owner: group:data-acquisition
   definition:
     $text: ./docs/user/reference/asyncapi.yaml
